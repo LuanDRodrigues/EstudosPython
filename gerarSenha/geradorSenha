@@ -1,0 +1,70 @@
+from datetime import date
+import random, string
+
+
+def geraSenha(carac, opcao):
+    
+    # declaração das variáveiss
+    listaSenha = list()
+    count = 1
+
+    # Comando para Gerar a Senha
+    chars = string.ascii_letters + string.digits + '!@#$%?'
+    rnd = random.SystemRandom()
+
+    for i in range(opcao): listaSenha.append(str(''.join(rnd.choice(chars) for i in range(carac))))
+
+    # Mostra a senha gerada no terminal
+    print('\n','='*35)
+    for i in listaSenha:
+        mensagem = str(f'Opção {count}: (--  {i}  --)')
+        print(f'{mensagem:>35}')
+        count += 1
+    print('='*35,'\n')
+    return listaSenha
+
+def gravarSenha(senha, nome, fin):
+    # Gravação da data atual
+    data = str(date.today())
+    count = 1
+
+    # Sequência para Iniciar a gracação em arquivo de acordo com os dados informados.
+    arquivo = open(f'gerarSenha/Senha_{fin}_{nome}.txt', 'a', encoding='UTF-8')
+    arquivo.write('\n{}'.format('='*50))
+    arquivo.write('\n{:^50}'.format('NOVA SENHA'))
+    arquivo.write('\n{}'.format('='*50))
+    arquivo.write(f'\n{data:>50}')
+    for i in senha:
+        arquivo.write('\n{:<15}:{:>35}'.format('Senha ' + str(count), i))
+        count += 1
+    arquivo.write('\n{}'.format('-'*50))
+    arquivo.close()
+
+
+if __name__ == '__main__':
+
+    emissao = 'SIM'
+
+    while True:
+
+        # Pede se o usuário gostaria de gera a nova senha.
+        if emissao in 'SIM':
+            quantCarac = int(input('Quantos caracteres Precisa: '))
+            quantOpc = int(input('Quantas Opções: '))
+            senha = geraSenha(quantCarac, quantOpc)
+
+            # Pede se o usuário gostaria de realizar a gravacao da senha em um arquivo.
+            gravacao = str(input('Gostaria de GRAVAR uma nova senha: [ S/N ]')).upper()
+            if gravacao in 'SIM':
+                nome = str(input('Digite o seu Nome:')).split()[0].upper()
+                finalidade = str(input('Qual o Site: ')).upper()
+                gravarSenha(senha, nome, finalidade)
+                print('O Arquivo foi gerado. \nCaso já houvesse o arquivo nomeado a senha foi incluida nele.')
+            else:
+                print(f'Ok !\nEssa senha não foi gravada.\nMas lembre-se de salva-la')
+                pass
+        else:
+            print(f'Muito obrigado pela Preferência!')
+            break
+
+        emissao = str(input('Gostaria de EMITIR uma nova senha: [ S/N ]')).upper()
